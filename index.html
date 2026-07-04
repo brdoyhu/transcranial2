@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>经颅光刺激仿真评估工作站 - 系统登录</title>
+  <style>
+    :root {
+      --ink: #174269;
+      --muted: #7fa4c5;
+      --blue: #2f8df7;
+      --cyan: #25c2ea;
+      --deep: #dff2ff;
+      --deep-2: #eff8ff;
+      --line: #d5eaff;
+      --field: #ffffff;
+      --panel: rgba(244, 250, 255, 0.94);
+      --shadow: 0 28px 80px rgba(40, 123, 196, 0.18);
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-width: 1180px;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(230, 245, 255, 0.92), rgba(246, 251, 255, 0.76) 42%, rgba(220, 239, 255, 0.88)),
+        url("assets/login-brain-bg.png") center / cover no-repeat;
+      overflow: auto;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 48px;
+    }
+
+    .login-card {
+      width: min(1220px, calc(100vw - 128px));
+      height: min(720px, calc(100vh - 104px));
+      min-height: 600px;
+      display: grid;
+      grid-template-columns: 40% 60%;
+      border: 1px solid rgba(255, 255, 255, 0.58);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-pane {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 48px 56px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 42% 18%, rgba(93, 172, 242, 0.24), transparent 24%),
+        radial-gradient(circle at 78% 66%, rgba(37, 194, 234, 0.16), transparent 30%),
+        linear-gradient(180deg, rgba(237, 248, 255, 0.98), rgba(218, 239, 255, 0.98));
+      overflow: hidden;
+    }
+
+    .brand-pane::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.42;
+      background-image: radial-gradient(circle, rgba(87, 158, 219, 0.42) 1.3px, transparent 1.5px);
+      background-size: 30px 30px;
+    }
+
+    .brand-pane > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-mark {
+      width: 176px;
+      height: 124px;
+      margin: 0 0 22px;
+      display: flex;
+      align-items: center;
+    }
+
+    .brand-mark img {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.16));
+    }
+
+    .brand-pane h1 {
+      margin: 0;
+      color: #15527f;
+      font-size: 36px;
+      line-height: 1.26;
+      font-weight: 800;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .accent-line {
+      width: 76px;
+      height: 5px;
+      margin: 24px 0 38px;
+      background: var(--cyan);
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 18px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: #5f87a9;
+      font-size: 17px;
+      line-height: 1.35;
+    }
+
+    .check {
+      width: 20px;
+      height: 20px;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 2px solid var(--cyan);
+      border-radius: 50%;
+      color: var(--cyan);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .version {
+      margin-top: auto;
+      color: #8eb2cf;
+      font-size: 14px;
+    }
+
+    .form-pane {
+      display: grid;
+      align-content: center;
+      padding: 42px 64px;
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.72), rgba(238, 248, 255, 0.94) 46%, rgba(229, 243, 255, 0.95)),
+        var(--panel);
+    }
+
+    .form-inner {
+      max-width: 700px;
+    }
+
+    .form-pane h2 {
+      margin: 0;
+      color: #174269;
+      font-size: 34px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 8px 0 26px;
+      color: #9aa8ba;
+      font-size: 17px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 26px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label,
+    .identity-title,
+    .path-title {
+      color: #416d92;
+      font-size: 15px;
+      font-weight: 750;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap svg {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      width: 22px;
+      height: 22px;
+      transform: translateY(-50%);
+      color: #9aa9ba;
+      pointer-events: none;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      height: 54px;
+      padding: 0 54px 0 62px;
+      border: 1px solid #e4eaf1;
+      border-radius: 10px;
+      outline: none;
+      color: #52647a;
+      background: var(--field);
+      font-size: 16px;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .input-wrap input::placeholder {
+      color: #b1bdca;
+    }
+
+    .input-wrap input:focus {
+      border-color: #7fb2ff;
+      box-shadow: 0 0 0 3px rgba(17, 120, 255, 0.14);
+    }
+
+    .eye {
+      position: absolute;
+      right: 42px;
+      top: 50%;
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      transform: translateY(-50%);
+      border: 0;
+      color: #94a3b7;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .identity {
+      grid-column: 1 / -1;
+      display: grid;
+      gap: 12px;
+    }
+
+    .identity-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .role-option {
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      color: #76869a;
+      background: rgba(255, 255, 255, 0.28);
+      cursor: pointer;
+      font-size: 17px;
+      font-weight: 680;
+    }
+
+    .role-option.active {
+      border-color: #2f8df7;
+      color: #1f78d4;
+      background: rgba(47, 141, 247, 0.1);
+    }
+
+    .role-option svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .path {
+      grid-column: 1 / -1;
+      display: grid;
+      gap: 10px;
+    }
+
+    .path-toggle {
+      display: grid;
+      gap: 10px;
+    }
+
+    .path-toggle summary {
+      color: #416d92;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 750;
+      list-style: none;
+    }
+
+    .path-toggle summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .path-toggle summary::after {
+      content: "展开/收起";
+      margin-left: 12px;
+      color: #2f8df7;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .path-row {
+      display: grid;
+      grid-template-columns: 1fr 130px;
+      gap: 12px;
+    }
+
+    .path-row .input-wrap input {
+      height: 52px;
+      font-size: 15px;
+    }
+
+    .change-path {
+      border: 0;
+      border-radius: 10px;
+      color: #24557d;
+      background: #e4f3ff;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 760;
+    }
+
+    .hint {
+      color: #b0bdcc;
+      font-size: 13px;
+    }
+
+    .login-btn {
+      grid-column: 1 / -1;
+      height: 62px;
+      margin-top: 12px;
+      border: 0;
+      border-radius: 10px;
+      color: #ffffff;
+      background: linear-gradient(90deg, #2f8df7, #25bde9);
+      box-shadow: 0 16px 26px rgba(17, 120, 255, 0.26);
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: 820;
+    }
+
+    .form-footer {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-top: 10px;
+      color: #b1becb;
+      font-size: 15px;
+    }
+
+    .remember {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .remember input {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--blue);
+    }
+
+    .support {
+      color: #b1becb;
+      text-decoration: none;
+    }
+
+    @media (max-height: 760px) {
+      .page {
+        padding: 24px;
+      }
+
+      .login-card {
+        height: min(672px, calc(100vh - 48px));
+        min-height: 560px;
+      }
+
+      .brand-pane {
+        padding: 30px 48px;
+      }
+
+      .brand-mark {
+        width: 150px;
+        height: 96px;
+        margin-bottom: 12px;
+      }
+
+      .brand-pane h1 {
+        font-size: 31px;
+      }
+
+      .accent-line {
+        margin: 16px 0 24px;
+      }
+
+      .feature-list {
+        gap: 12px;
+      }
+
+      .feature-list li {
+        font-size: 15px;
+      }
+
+      .form-pane {
+        padding: 24px 52px;
+      }
+
+      .subtitle {
+        margin-bottom: 16px;
+      }
+
+      .form-grid {
+        gap: 12px 22px;
+      }
+
+      .input-wrap input {
+        height: 48px;
+      }
+
+      .role-option {
+        height: 48px;
+      }
+
+      .path-row .input-wrap input {
+        height: 46px;
+      }
+
+      .login-btn {
+        height: 54px;
+        margin-top: 4px;
+        font-size: 20px;
+      }
+
+      .form-footer {
+        margin-top: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="login-card" aria-label="经颅光刺激仿真评估工作站登录">
+      <aside class="brand-pane">
+        <div class="brand-mark" aria-hidden="true">
+          <img src="assets/system-logo.png" alt="">
+        </div>
+
+        <h1>经颅光刺激<br>仿真评估工作站</h1>
+        <div class="accent-line" aria-hidden="true"></div>
+
+        <ul class="feature-list">
+          <li><span class="check">✓</span><span>基于高精度解剖模型的脑部光场仿真</span></li>
+          <li><span class="check">✓</span><span>多维度刺激效果定量评估系统</span></li>
+          <li><span class="check">✓</span><span>国家级医疗科研标准数据处理中心</span></li>
+        </ul>
+
+        <div class="version">Version 2.4.0 Build 20241027</div>
+      </aside>
+
+      <section class="form-pane">
+        <div class="form-inner">
+          <h2>系统登录</h2>
+          <p class="subtitle">请输入您的凭据以访问工作站</p>
+
+          <form class="form-grid" id="loginForm">
+            <div class="field">
+              <label for="account">用户名</label>
+              <div class="input-wrap">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z"/>
+                </svg>
+                <input id="account" name="account" type="text" placeholder="请输入用户名" autocomplete="username">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="org">单位/机构</label>
+              <div class="input-wrap">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" d="M4 21V3h14v18h-5v-4H9v4H4Zm4-13h2V6H8v2Zm0 4h2v-2H8v2Zm0 4h2v-2H8v2Zm5-8h2V6h-2v2Zm0 4h2v-2h-2v2Zm0 4h2v-2h-2v2Z"/>
+                </svg>
+                <input id="org" name="org" type="text" placeholder="请输入或选择单位名称" list="orgList">
+                <datalist id="orgList">
+                  <option value="华东脑科学中心"></option>
+                  <option value="北京神经调控中心"></option>
+                  <option value="上海光医学转化研究院"></option>
+                </datalist>
+              </div>
+            </div>
+
+            <div class="field full">
+              <label for="password">密码</label>
+              <div class="input-wrap">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path fill="currentColor" d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2Zm-7-2a2 2 0 1 1 4 0v2h-4V7Zm3 9.7V18h-2v-1.3a2 2 0 1 1 2 0Z"/>
+                </svg>
+                <input id="password" name="password" type="password" placeholder="请输入密码" autocomplete="current-password">
+                <button class="eye" type="button" id="togglePassword" aria-label="显示或隐藏密码">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="currentColor" d="m3.3 2 18.8 18.8-1.3 1.3-3.1-3.1A11.6 11.6 0 0 1 12 20C7 20 2.7 16.9 1 12.5a11.9 11.9 0 0 1 4-5.3L2 3.3 3.3 2Zm5.2 8.2A3.8 3.8 0 0 0 8 12a4 4 0 0 0 5.6 3.7l-1.7-1.7A2 2 0 0 1 10 12c0-.2 0-.4.1-.6l-1.6-1.2ZM12 5c5 0 9.3 3.1 11 7.5a12 12 0 0 1-3.2 4.6l-2.7-2.7A4 4 0 0 0 11.2 9L8.9 6.7A11.8 11.8 0 0 1 12 5Z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="identity">
+              <div class="identity-title">登录身份</div>
+              <div class="identity-options">
+                <button class="role-option active" type="button" data-role="admin">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2 20 5v6c0 5-3.4 9.7-8 11-4.6-1.3-8-6-8-11V5l8-3Zm0 5a2.3 2.3 0 1 0 0 4.6A2.3 2.3 0 0 0 12 7Zm-4 10h8c-.2-2-1.8-3.4-4-3.4S8.2 15 8 17Z"/></svg>
+                  管理员
+                </button>
+                <button class="role-option" type="button" data-role="operator">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm-7 9c.5-4 3.3-7 7-7 1.4 0 2.7.4 3.8 1.2l-1.6 1.6 3 3 3.8-3.8-1.4-1.4-1.4 1.4A8.2 8.2 0 0 0 12 12c-4.8 0-8.5 3.8-9 9h2Z"/></svg>
+                  操作者
+                </button>
+              </div>
+            </div>
+
+            <div class="path">
+              <details class="path-toggle" open>
+                <summary>数据存储路径设置</summary>
+                <div class="path-row">
+                  <div class="input-wrap">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path fill="currentColor" d="M3 6.5A2.5 2.5 0 0 1 5.5 4H10l2 2h6.5A2.5 2.5 0 0 1 21 8.5V9H3V6.5Zm0 4.5h18l-2 8H5l-2-8Z"/>
+                    </svg>
+                    <input id="dataPath" type="text" value="C:\\Users\\Public\\Workstation\\Data">
+                  </div>
+                  <button class="change-path" type="button">更改路径</button>
+                </div>
+                <div class="hint">* 请确保该路径具有读写权限，项目报告与中间仿真数据将保存在此目录。</div>
+              </details>
+            </div>
+
+            <button class="login-btn" type="submit">立即登录工作站</button>
+
+            <div class="form-footer">
+              <label class="remember"><input id="remember" type="checkbox"> 记住登录信息</label>
+              <a class="support" href="ui-static/index.html">无法登录？联系技术支持</a>
+            </div>
+          </form>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const form = document.querySelector("#loginForm");
+    const account = document.querySelector("#account");
+    const org = document.querySelector("#org");
+    const password = document.querySelector("#password");
+    const togglePassword = document.querySelector("#togglePassword");
+    const roleOptions = document.querySelectorAll(".role-option");
+
+    roleOptions.forEach((option) => {
+      option.addEventListener("click", () => {
+        roleOptions.forEach((item) => item.classList.remove("active"));
+        option.classList.add("active");
+      });
+    });
+
+    togglePassword.addEventListener("click", () => {
+      password.type = password.type === "password" ? "text" : "password";
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      window.location.href = "ui-static/index.html";
+    });
+
+    account.addEventListener("dblclick", () => {
+      account.value = "admin";
+      org.value = "华东脑科学中心";
+      password.value = "demo2026";
+    });
+  </script>
+</body>
+</html>
